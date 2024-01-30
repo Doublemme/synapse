@@ -8,6 +8,7 @@ import (
 
 	"github.com/doublemme/synapse/pkg/core/middlewares"
 	cm "github.com/doublemme/synapse/pkg/core/models"
+	"github.com/doublemme/synapse/pkg/core/routes"
 	"github.com/doublemme/synapse/pkg/synapse/types"
 	"github.com/labstack/echo/v4"
 )
@@ -51,9 +52,9 @@ func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts, 
 
 	conf := SynapseConfig{
 		core: types.ModuleConfig{
-			Acl:    make([]interface{}, 0),
+			Acl:    make([]types.AclModule, 0),
 			Models: defaultModels,
-			Routes: make([]interface{}, 0),
+			Routes: []types.InitModuleRoutes{routes.InitAuthRoutes, routes.InitUserRoutes, routes.InitRoleRoutes},
 		},
 		DatabaseConn: DbConnFunc,
 		Opts:         *Options,
@@ -93,10 +94,27 @@ func (sc *SynapseConfig) Init(e *echo.Echo) error {
 	tokenStore := oauth2Gorm.NewTokenStoreWithDB(tokenStoreCfg, db, 0)
 	clientStore := oauth2Gorm.NewClientStoreWithDB(clientStoreCfg, db)
 
-	//Execute migrations
+	//Execute core migrations
 	err = db.AutoMigrate(sc.core.Models...)
 	if err != nil {
 		return err
+	}
+
+	//Init the core routes
+	for _, routeFunc := range sc.core.Routes {
+		routeFunc(e)
+	}
+
+	for _, module := range sc.Modules {
+		//Execute modules migrations
+		err = db.AutoMigrate(module.Models...)
+		if err != nil {
+			return err
+		}
+		//Init routes
+		for _, routeFunc := range module.Routes {
+			routeFunc(e)
+		}
 	}
 
 	defer tokenStore.Close()

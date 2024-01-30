@@ -16,8 +16,7 @@ func DbConn() gorm.Dialector {
 func main() {
 	e := echo.New()
 
-	//TODO: Load all the configurations
-
+	// Load all the configurations
 	service := synapse.NewSynapseService(DbConn, &synapse.DefaultOptions)
 	service.Init(e)
 

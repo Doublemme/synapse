@@ -1,12 +1,15 @@
 package types
 
+import "github.com/labstack/echo/v4"
+
 type ModuleConfig struct {
-	Acl    []interface{}
+	Acl    []AclModule
 	Models []interface{}
-	Routes []interface{}
+	Routes []InitModuleRoutes
 }
 
 type LoadModuleFunc func() ModuleConfig
+type InitModuleRoutes func(e *echo.Echo)
 
 type AclModule struct {
 	Name        string        `json:"name"`
