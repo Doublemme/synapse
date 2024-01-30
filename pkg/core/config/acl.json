@@ -1,0 +1,96 @@
+[
+  {
+    "name": "Core",
+    "description": "Core module resources",
+    "resources": [
+      {
+        "name": "general",
+        "description": "Grant the access to the application general settings",
+        "actions": [
+          {
+            "name": "read",
+            "description": ""
+          },
+          {
+            "name": "write",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "mail-config",
+        "description": "Grant the access to the email configuration settings",
+        "actions": [
+          {
+            "name": "read",
+            "description": "Allow the user to read the email server settings"
+          },
+          {
+            "name": "write",
+            "description": "Allow the user to edit the email server settings"
+          }
+        ]
+      },
+      {
+        "name": "mail-template",
+        "description": "Grant the access to the email template settings",
+        "actions": [
+          {
+            "name": "read",
+            "description": "Allow the user to read the email templates list"
+          },
+          {
+            "name": "write",
+            "description": "Allow the user to create/edit the an email template"
+          },
+          {
+            "name": "delete",
+            "description": "Allow the user to delete the an email template"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "security",
+    "description": "Security module resources",
+    "resources": [
+      {
+        "name": "users",
+        "description": "Grant the access to the application section to create, edit or delete the users",
+        "actions": [
+          {
+            "name": "read",
+            "description": "Allow the user to read the users list"
+          },
+          {
+            "name": "write",
+            "description": "Allow the user to create/edit a user"
+          },
+          {
+            "name": "delete",
+            "description": "Allow the user to delete a user"
+          }
+        ]
+      },
+      {
+        "name": "roles",
+        "description": "Grant the access to the application section to create, edit or delete the roles",
+        "actions": [
+          {
+            "name": "read",
+            "description": "Allow the user to read the roles list"
+          },
+          {
+            "name": "write",
+            "description": "Allow the user to create/edit a role"
+          },
+          {
+            "name": "delete",
+            "description": "Allow the user to delete a role"
+          }
+        ]
+      }
+    ]
+  }
+]
