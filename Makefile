@@ -5,8 +5,8 @@ HELP_CMD="How to use it \n \
 	- drop - Drop all the tables from the database \n \
 	- up - Recreate all the tables in the database and populate them with some mock data \n \
 	- test - Run all the unit tests \n \
-	- templ - Generate all the go files from the templates \n \
-	- run - Start up the application"
+	- templ - Generate all the go files from the templates"
+
 
 
 all:help
@@ -21,10 +21,7 @@ up:
 	@echo "Up cmd"
 
 test:
-	@ go test -v ./pkg/...
-
-run: templ
-	@ go run main.go
+	@go test -v ./pkg/...
 
 help:
 	@echo $(HELP_CMD)

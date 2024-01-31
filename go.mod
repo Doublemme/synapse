@@ -5,6 +5,7 @@ go 1.21.5
 require gorm.io/driver/mysql v1.5.2
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-oauth2/mysql/v4 v4.1.0 // indirect
 	github.com/go-oauth2/oauth2/v4 v4.5.2 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
@@ -18,7 +19,11 @@ require (
 	github.com/microsoft/go-mssqldb v1.6.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
 	gopkg.in/gorp.v2 v2.2.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/sqlite v1.5.4 // indirect
 	src.techknowlogick.com/oauth2-gorm v0.0.0-20220601194631-b3be20d6b196 // indirect
 )
