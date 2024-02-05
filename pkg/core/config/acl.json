@@ -1,6 +1,6 @@
 [
   {
-    "name": "Core",
+    "name": "core",
     "description": "Core module resources",
     "resources": [
       {
@@ -9,11 +9,11 @@
         "actions": [
           {
             "name": "read",
-            "description": ""
+            "description": "Allow the user to read the application's general settings"
           },
           {
             "name": "write",
-            "description": ""
+            "description": "Allow the user to edit the application's general settings"
           }
         ]
       },

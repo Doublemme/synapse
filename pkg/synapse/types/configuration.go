@@ -1,6 +1,8 @@
 package types
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+)
 
 type ModuleConfig struct {
 	Acl    []AclModule
@@ -8,7 +10,6 @@ type ModuleConfig struct {
 	Routes []InitModuleRoutes
 }
 
-type LoadModuleFunc func() ModuleConfig
 type InitModuleRoutes func(e *echo.Echo)
 
 type AclModule struct {

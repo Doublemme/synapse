@@ -18,8 +18,9 @@ func DbConn() gorm.Dialector {
 func TestSynapseService(t *testing.T) {
 
 	e := echo.New()
-	svc := NewSynapseService(DbConn, &DefaultOptions)
+	svc, err := NewSynapseService(DbConn, &DefaultOptions)
 
-	assert.Nil(t, svc.Init(e), "error initializing the synapse service")
+	assert.ErrorIs(t, err, nil, "error creating synapse configuration")
+	assert.Nil(t, svc.Init(e), "error initializing synapse service")
 
 }

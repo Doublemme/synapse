@@ -8,13 +8,13 @@ import (
 )
 
 type OauthUser struct {
-	Id        string `gorm:"primaryKey;type:char(36)"`
+	Id        uuid.UUID `gorm:"primaryKey;type:char(36)"`
 	FirstName *string
 	LastName  *string
 	Email     string `gorm:"unique;not null;"`
 	Language  string `gorm:"default:EN;not null;type:varchar(4)"`
 	Password  string `gorm:"not null;"`
-	RoleID    string
+	RoleID    uuid.UUID
 	Role      AuthRole `gorm:"constraint:OnUpdate:CASCADE;OnDelete:SET NULL"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -27,7 +27,6 @@ func (user *OauthUser) BeforeCreate(tx *gorm.DB) error {
 		return err
 	}
 
-	user.Id = uuid.String()
-
+	user.Id = uuid
 	return nil
 }

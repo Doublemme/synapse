@@ -9,9 +9,12 @@ import (
 	"github.com/doublemme/synapse/pkg/core/middlewares"
 	cm "github.com/doublemme/synapse/pkg/core/models"
 	"github.com/doublemme/synapse/pkg/core/routes"
+	"github.com/doublemme/synapse/pkg/synapse/helpers"
 	"github.com/doublemme/synapse/pkg/synapse/types"
 	"github.com/labstack/echo/v4"
 )
+
+type LoadModuleFunc func() types.ModuleConfig
 
 type SynapseOpts struct {
 	TokenLifetime       time.Duration
@@ -38,9 +41,7 @@ var DefaultOptions SynapseOpts = SynapseOpts{
 // @param DbConnFunc - A function that must return a `gorm.Dialector` that handle the connection to the database.
 //
 // @param Options    - Handle the options of the service
-//
-// @param ...modules - A list of functions of type LoadModuleFunc to load all the modules provided
-func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts, modules ...types.LoadModuleFunc) *SynapseConfig {
+func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts) (*SynapseConfig, error) {
 	// Load default models
 	defaultModels := append(make([]interface{}, 0),
 		&cm.OauthUser{},
@@ -50,22 +51,25 @@ func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts, 
 		cm.AuthAction{},
 	)
 
+	var coreAcl []types.AclModule
+
+	err := helpers.UnmarshalAcl(&coreAcl, "../core/config/acl.json")
+	if err != nil {
+		return nil, err
+	}
+	coreConfig := types.ModuleConfig{
+		Acl:    coreAcl,
+		Models: defaultModels,
+		Routes: []types.InitModuleRoutes{routes.InitAuthRoutes, routes.InitUserRoutes, routes.InitRoleRoutes},
+	}
+
 	conf := SynapseConfig{
-		core: types.ModuleConfig{
-			Acl:    make([]types.AclModule, 0),
-			Models: defaultModels,
-			Routes: []types.InitModuleRoutes{routes.InitAuthRoutes, routes.InitUserRoutes, routes.InitRoleRoutes},
-		},
+		core:         coreConfig,
 		DatabaseConn: DbConnFunc,
 		Opts:         *Options,
 	}
 
-	// Load all the modules provided
-	for _, m := range modules {
-		conf.Modules = append(conf.Modules, m())
-	}
-
-	return &conf
+	return &conf, nil
 }
 
 // Initialize all the components in the configuration
@@ -105,16 +109,28 @@ func (sc *SynapseConfig) Init(e *echo.Echo) error {
 		routeFunc(e)
 	}
 
+	//Load the core acl
+	if err := helpers.SyncAclToDb(db, &sc.core.Acl); err != nil {
+		return err
+	}
+
 	for _, module := range sc.Modules {
+
 		//Execute modules migrations
 		err = db.AutoMigrate(module.Models...)
 		if err != nil {
 			return err
 		}
+
 		//Init routes
 		for _, routeFunc := range module.Routes {
 			routeFunc(e)
 		}
+
+		if err := helpers.SyncAclToDb(db, &module.Acl); err != nil {
+			return err
+		}
+
 	}
 
 	defer tokenStore.Close()
@@ -122,9 +138,23 @@ func (sc *SynapseConfig) Init(e *echo.Echo) error {
 	container := middlewares.ContainerContext{
 		TokenConfig:  tokenStore,
 		ClientConfig: clientStore,
+		Db:           db,
 	}
 
 	e.Use(middlewares.ContainerMiddleware(&container))
+
+	return nil
+}
+
+// Load the given modules into the Synapse service config.
+//
+// This must be invoked before the synapseConfig.Init()
+func (sc *SynapseConfig) LoadModules(modules ...LoadModuleFunc) error {
+
+	// Load all the modules provided
+	for _, moduleFunc := range modules {
+		sc.Modules = append(sc.Modules, moduleFunc())
+	}
 
 	return nil
 }
