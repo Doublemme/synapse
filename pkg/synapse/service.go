@@ -1,6 +1,7 @@
 package synapse
 
 import (
+	"os"
 	"time"
 
 	"gorm.io/gorm"
@@ -53,10 +54,17 @@ func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts) 
 
 	var coreAcl []types.AclModule
 
-	err := helpers.UnmarshalAcl(&coreAcl, "../core/config/acl.json")
+	file, err := os.OpenFile("../core/config/acl.json", 0, os.ModeAppend)
 	if err != nil {
 		return nil, err
 	}
+
+	err = helpers.UnmarshalAcl(&coreAcl, file)
+	if err != nil {
+		return nil, err
+	}
+	file.Close()
+
 	coreConfig := types.ModuleConfig{
 		Acl:    coreAcl,
 		Models: defaultModels,
@@ -110,7 +118,7 @@ func (sc *SynapseConfig) Init(e *echo.Echo) error {
 	}
 
 	//Load the core acl
-	if err := helpers.SyncAclToDb(db, &sc.core.Acl); err != nil {
+	if err := helpers.SyncAcl(db, &sc.core.Acl); err != nil {
 		return err
 	}
 
@@ -127,7 +135,7 @@ func (sc *SynapseConfig) Init(e *echo.Echo) error {
 			routeFunc(e)
 		}
 
-		if err := helpers.SyncAclToDb(db, &module.Acl); err != nil {
+		if err := helpers.SyncAcl(db, &module.Acl); err != nil {
 			return err
 		}
 
