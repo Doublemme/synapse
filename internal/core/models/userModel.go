@@ -8,17 +8,17 @@ import (
 )
 
 type OauthUser struct {
-	Id        uuid.UUID      `gorm:"primaryKey;type:char(36)" json:"id"`
+	Id        uuid.UUID      `json:"id" gorm:"primaryKey;type:char(36)"`
 	FirstName *string        `json:"firstName"`
 	LastName  *string        `json:"lastName"`
-	Email     string         `gorm:"unique;not null;" json:"email"`
-	Language  string         `gorm:"default:EN;not null;type:varchar(4)" json:"language"`
-	Password  string         `gorm:"not null;" json:"password"`
+	Email     string         `json:"email" gorm:"unique;not null;"`
+	Language  string         `json:"language" gorm:"default:EN;not null;type:varchar(4)"`
+	Password  string         `json:"password" gorm:"not null;"`
 	RoleID    uuid.UUID      `json:"-"`
-	Role      AuthRole       `gorm:"constraint:OnUpdate:CASCADE;OnDelete:SET NULL" json:"role"`
+	Role      AuthRole       `json:"role" gorm:"constraint:OnUpdate:CASCADE;OnDelete:SET NULL"`
 	CreatedAt time.Time      `json:"createdAt"`
 	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }
 
 func (user *OauthUser) BeforeCreate(tx *gorm.DB) error {

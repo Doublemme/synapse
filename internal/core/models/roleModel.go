@@ -8,13 +8,13 @@ import (
 )
 
 type AuthRole struct {
-	Id          uuid.UUID       `gorm:"primaryKey;type:char(36);" json:"id"`
+	Id          uuid.UUID       `json:"id" gorm:"primaryKey;type:char(36);"`
 	Name        string          `json:"name"`
-	Description string          `gorm:"type:text" json:"description"`
-	Actions     []*AuthAction   `gorm:"many2many:role_actions;" json:"actions"`
+	Description string          `json:"description" gorm:"type:text"`
+	Actions     []*AuthAction   `json:"actions" gorm:"many2many:role_actions;"`
 	CreatedAt   time.Time       `json:"createdAt"`
 	UpdatedAt   time.Time       `json:"updatedAt"`
-	DeletedAt   *gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	DeletedAt   *gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }
 
 func (role *AuthRole) BeforeCreate(tx *gorm.DB) error {
@@ -29,9 +29,9 @@ func (role *AuthRole) BeforeCreate(tx *gorm.DB) error {
 }
 
 type AuthModule struct {
-	Id          uuid.UUID `gorm:"primaryKey;type:char(36);" json:"id"`
-	Name        string    `gorm:"unique" json:"name"`
-	Description string    `gorm:"type:text" json:"description"`
+	Id          uuid.UUID `json:"id" gorm:"primaryKey;type:char(36);"`
+	Name        string    `json:"name" gorm:"unique"`
+	Description string    `json:"description" gorm:"type:text"`
 }
 
 func (module *AuthModule) BeforeCreate(tx *gorm.DB) error {
@@ -46,11 +46,11 @@ func (module *AuthModule) BeforeCreate(tx *gorm.DB) error {
 }
 
 type AuthResource struct {
-	Id          uuid.UUID  `gorm:"primaryKey;type:char(36);" json:"id"`
+	Id          uuid.UUID  `json:"id" gorm:"primaryKey;type:char(36);"`
 	ModuleId    uuid.UUID  `json:"moduleId"`
 	Module      AuthModule `json:"-" gorm:"foreignKey:ModuleId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Name        string     `gorm:"unique" json:"name"`
-	Description string     `gorm:"type:text" json:"description"`
+	Name        string     `json:"name" gorm:"unique"`
+	Description string     `json:"description" gorm:"type:text"`
 }
 
 func (resource *AuthResource) BeforeCreate(tx *gorm.DB) error {
@@ -66,12 +66,12 @@ func (resource *AuthResource) BeforeCreate(tx *gorm.DB) error {
 }
 
 type AuthAction struct {
-	Id          uuid.UUID    `gorm:"primaryKey;type:char(36);" json:"id"`
+	Id          uuid.UUID    `json:"id" gorm:"primaryKey;type:char(36);"`
 	ResourceId  uuid.UUID    `json:"resourceId"`
 	Resource    AuthResource `json:"-" gorm:"foreignKey:ResourceId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Name        string       `json:"name"`
-	Description string       `gorm:"type:text" json:"description"`
-	Roles       []*AuthRole  `gorm:"many2many:role_actions;" json:"-"`
+	Description string       `json:"description" gorm:"type:text"`
+	Roles       []*AuthRole  `json:"-" gorm:"many2many:role_actions;"`
 }
 
 func (action *AuthAction) BeforeCreate(tx *gorm.DB) error {
