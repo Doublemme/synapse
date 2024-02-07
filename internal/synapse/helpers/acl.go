@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/doublemme/synapse/pkg/core/models"
-	"github.com/doublemme/synapse/pkg/synapse/types"
+	"github.com/doublemme/synapse/internal/core/models"
+	"github.com/doublemme/synapse/internal/synapse/types"
 	"gorm.io/gorm"
 )
 
@@ -40,6 +40,7 @@ func SyncAcl(db *gorm.DB, modules *[]types.AclModule) error {
 		if !exist {
 
 			module = models.AuthModule{
+
 				Name:        m.Name,
 				Description: m.Description,
 			}
@@ -85,7 +86,7 @@ func SyncAcl(db *gorm.DB, modules *[]types.AclModule) error {
 		}
 
 	}
-
+	//TODO: Implement deletions of removed modules, resources or actions
 	return nil
 }
 

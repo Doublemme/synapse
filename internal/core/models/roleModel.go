@@ -62,6 +62,7 @@ func (resource *AuthResource) BeforeCreate(tx *gorm.DB) error {
 	resource.Id = uuid
 
 	return nil
+
 }
 
 type AuthAction struct {

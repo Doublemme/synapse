@@ -7,11 +7,11 @@ import (
 	"gorm.io/gorm"
 	oauth2Gorm "src.techknowlogick.com/oauth2-gorm"
 
-	"github.com/doublemme/synapse/pkg/core/middlewares"
-	cm "github.com/doublemme/synapse/pkg/core/models"
-	"github.com/doublemme/synapse/pkg/core/routes"
-	"github.com/doublemme/synapse/pkg/synapse/helpers"
-	"github.com/doublemme/synapse/pkg/synapse/types"
+	"github.com/doublemme/synapse/internal/core/middlewares"
+	cm "github.com/doublemme/synapse/internal/core/models"
+	"github.com/doublemme/synapse/internal/core/routes"
+	"github.com/doublemme/synapse/internal/synapse/helpers"
+	"github.com/doublemme/synapse/internal/synapse/types"
 	"github.com/labstack/echo/v4"
 )
 
