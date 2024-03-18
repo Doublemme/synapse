@@ -1,0 +1,9 @@
+package dashboard
+
+import "github.com/doublemme/synapse/pkg/view/layouts"
+
+templ Dashboard() {
+	@layouts.Auth() {
+		<div>Welcome to Synapse</div>
+	}
+}

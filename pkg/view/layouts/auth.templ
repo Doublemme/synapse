@@ -1,0 +1,17 @@
+package layouts
+
+import "github.com/doublemme/synapse/pkg/view"
+
+templ Auth() {
+	@views.Index() {
+		<div class="App">
+			<header>
+				<div>Synapse</div>
+				<button type="button" hx-post="/auth/logout" hx-trigger="click" hx-target="body">Logout</button>
+			</header>
+			<main id="contents">
+				{ children... }
+			</main>
+		</div>
+	}
+}

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/doublemme/synapse/internal/core/models"
-	"github.com/doublemme/synapse/internal/synapse/types"
+	models "github.com/doublemme/synapse/pkg/model"
+	"github.com/doublemme/synapse/pkg/types"
 	"gorm.io/gorm"
 )
 

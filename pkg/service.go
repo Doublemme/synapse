@@ -1,17 +1,18 @@
 package synapse
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"gorm.io/gorm"
 	oauth2Gorm "src.techknowlogick.com/oauth2-gorm"
 
-	"github.com/doublemme/synapse/internal/core/middlewares"
-	cm "github.com/doublemme/synapse/internal/core/models"
-	"github.com/doublemme/synapse/internal/core/routes"
-	"github.com/doublemme/synapse/internal/synapse/helpers"
-	"github.com/doublemme/synapse/internal/synapse/types"
+	routes "github.com/doublemme/synapse/pkg/handler"
+	"github.com/doublemme/synapse/pkg/helpers"
+	middlewares "github.com/doublemme/synapse/pkg/middleware"
+	cm "github.com/doublemme/synapse/pkg/model"
+	"github.com/doublemme/synapse/pkg/types"
 	"github.com/labstack/echo/v4"
 )
 
@@ -41,7 +42,7 @@ var DefaultOptions SynapseOpts = SynapseOpts{
 //
 // @param DbConnFunc - A function that must return a `gorm.Dialector` that handle the connection to the database.
 //
-// @param Options    - Handle the options of the service
+// @param Options - Handle the options of the service
 func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts) (*SynapseConfig, error) {
 	// Load default models
 	defaultModels := append(make([]interface{}, 0),
@@ -53,8 +54,11 @@ func NewSynapseService(DbConnFunc types.DatabaseConnFunc, Options *SynapseOpts) 
 	)
 
 	var coreAcl []types.AclModule
-
-	file, err := os.OpenFile("../core/config/acl.json", 0, os.ModeAppend)
+	workingDir, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+	file, err := os.OpenFile(fmt.Sprintf("%s/pkg/config/acl.json", workingDir), 0, os.ModeAppend)
 	if err != nil {
 		return nil, err
 	}

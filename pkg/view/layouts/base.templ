@@ -1,0 +1,11 @@
+package layouts
+
+import "github.com/doublemme/synapse/pkg/view"
+
+templ Base() {
+	@views.Index() {
+		<div class="App">
+			{ children... }
+		</div>
+	}
+}

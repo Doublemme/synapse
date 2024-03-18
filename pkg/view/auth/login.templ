@@ -1,0 +1,19 @@
+package auth
+
+import "github.com/doublemme/synapse/pkg/view/layouts"
+
+templ Login() {
+	@layouts.Base() {
+		<form id="auth-form" hx-post="/auth/login" hx-trigger="submit" hx-target="#auth-form">
+			<div class="password-wrapper">
+				<label for="email">Email</label>
+				<input id="email" type="email" name="email"/>
+			</div>
+			<div class="password-wrapper">
+				<label for="password">Password</label>
+				<input id="password" type="password" name="password"/>
+			</div>
+			<button type="submit">Login</button>
+		</form>
+	}
+}
